@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Calendar, MapPin, DollarSign, Users, Clock, CheckCircle, Loader2, X, Smartphone } from "lucide-react";
+import { Calendar, MapPin, Banknote, Users, Clock, CheckCircle, Loader2, X, Smartphone } from "lucide-react";
 
 const TYPE_COLORS: Record<string, string> = {
   EXAM:    "badge-red",
@@ -194,7 +194,7 @@ export function EventsListView({ events, role, parentPhone = "", studentIds = []
           <div className="mt-3 pt-3 border-t" style={{ borderColor: "hsl(var(--border))" }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                <Banknote className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
                 <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                   KES {evt.amount.toLocaleString()}
                 </span>

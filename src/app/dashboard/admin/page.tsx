@@ -7,7 +7,7 @@ import { AdminOverviewCharts } from "@/components/admin/AdminOverviewCharts";
 import { RecentNotifications } from "@/components/admin/RecentNotifications";
 import { RecentStudents } from "@/components/admin/RecentStudents";
 import { AdminFeeSummary } from "@/components/admin/AdminFeeSummary";
-import { Users, GraduationCap, School, BookMarked, DollarSign, Bell } from "lucide-react";
+import { Users, GraduationCap, School, BookMarked, Banknote, Bell } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
 async function getAdminStats() {
@@ -80,7 +80,7 @@ export default async function AdminDashboard() {
             title="Fee Collection"
             value={formatCurrency(stats.paidFees)}
             subtitle={`of ${formatCurrency(stats.totalFees)}`}
-            icon={DollarSign}
+            icon={Banknote}
             iconColor="text-emerald-600"
             iconBg="bg-emerald-50"
           />

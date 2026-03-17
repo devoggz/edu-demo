@@ -136,7 +136,6 @@ export function EventDetailView({ event, backHref, paymentStatus, payButton }: P
         {event.requiresPayment && event.amount && (
           <div className="card card-body">
             <p className="section-title mb-4 flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-emerald-500" />
               Event Fee
             </p>
 

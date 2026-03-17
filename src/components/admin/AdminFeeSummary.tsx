@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, Loader2, CheckCircle, DollarSign, AlertCircle, ChevronRight } from "lucide-react";
+import { Bell, Loader2, CheckCircle, Banknote, AlertCircle, ChevronRight } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
 interface FeeRow {
@@ -85,7 +85,7 @@ export function AdminFeeSummary({ fees }: { fees: FeeRow[] }) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="section-title flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-emerald-600" />
+              <Banknote className="w-4 h-4 text-emerald-600" />
               Outstanding Fee Balances
             </p>
             <p className="text-xs mt-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>

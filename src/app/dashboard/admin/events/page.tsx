@@ -81,7 +81,6 @@ export default async function AdminEventsPage() {
                       {evt.requiresPayment && evt.amount && (
                         <div className="flex items-center justify-between pt-2 mt-2 border-t" style={{ borderColor: "hsl(var(--border))" }}>
                           <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
-                            <DollarSign className="w-3.5 h-3.5" />
                             KES {evt.amount.toLocaleString()}
                           </div>
                           {evt.payments.length > 0 && (

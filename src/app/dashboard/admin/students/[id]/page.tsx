@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, GraduationCap, User, BookOpen, TrendingUp, DollarSign, Award, Calendar } from "lucide-react";
+import { ArrowLeft, GraduationCap, User, BookOpen, TrendingUp, Banknote, Award, Calendar } from "lucide-react";
 import { formatDate, formatCurrency, getInitials, getGradeColor, getCBCGradeLabel, getFeeStatusColor } from "@/lib/utils";
 import { FeePromptButton } from "@/components/admin/FeePromptButton";
 
@@ -130,7 +130,7 @@ export default async function AdminStudentDetailPage({
             </div>
             <div className={`bg-white rounded-2xl border p-4 shadow-sm flex items-center gap-3 ${feeBalance > 0 ? "border-red-100" : "border-green-100"}`}>
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${feeBalance > 0 ? "bg-red-50" : "bg-green-50"}`}>
-                <DollarSign className={`w-5 h-5 ${feeBalance > 0 ? "text-red-600" : "text-green-600"}`} />
+                <Banknote className={`w-5 h-5 ${feeBalance > 0 ? "text-red-600" : "text-green-600"}`} />
               </div>
               <div>
                 <p className="text-xs text-slate-400">Fee Balance</p>
@@ -221,7 +221,7 @@ export default async function AdminStudentDetailPage({
         {/* Fee Records */}
         <div className="card card-body">
           <h3 className="section-title flex items-center gap-2 mb-3">
-            <DollarSign className="w-4 h-4 text-slate-500" /> Fee Records
+            <Banknote className="w-4 h-4 text-slate-500" /> Fee Records
           </h3>
           <div className="table-scroll">
             <table className="data-table">

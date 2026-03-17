@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, GraduationCap, ClipboardList, Bell, DollarSign,
-  TrendingUp, BookOpen, FileText, BarChart2, Calendar, Award, CalendarDays,
+  TrendingUp, BookOpen, FileText, BarChart2, Calendar, Award, CalendarDays, Banknote,
 } from "lucide-react";
 
 interface BottomNavProps { role: "admin" | "teacher" | "parent" | "student"; }
@@ -15,13 +15,13 @@ const bottomNav = {
     { href: "/dashboard/admin",              label: "Home",   icon: LayoutDashboard },
     { href: "/dashboard/admin/students",      label: "Students", icon: GraduationCap },
     { href: "/dashboard/admin/events",        label: "Events", icon: CalendarDays },
-    { href: "/dashboard/admin/fees",          label: "Fees",   icon: DollarSign },
+    { href: "/dashboard/admin/fees",          label: "Fees",   icon: Banknote },
     { href: "/dashboard/admin/notifications", label: "Alerts", icon: Bell },
   ],
   teacher: [
     { href: "/dashboard/teacher",              label: "Home",   icon: LayoutDashboard },
     { href: "/dashboard/teacher/grades",       label: "Grades", icon: TrendingUp },
-    { href: "/dashboard/teacher/homework",     label: "HW",     icon: ClipboardList },
+    { href: "/dashboard/teacher/homework",     label: "HomeWork",     icon: ClipboardList },
     { href: "/dashboard/teacher/timetable",    label: "Schedule", icon: Calendar },
     { href: "/dashboard/teacher/notifications",label: "Alerts", icon: Bell },
   ],
@@ -29,7 +29,7 @@ const bottomNav = {
     { href: "/dashboard/parent",               label: "Home",   icon: LayoutDashboard },
     { href: "/dashboard/parent/homework",      label: "HW",     icon: BookOpen },
     { href: "/dashboard/parent/events",        label: "Events", icon: CalendarDays },
-    { href: "/dashboard/parent/fees",          label: "Fees",   icon: DollarSign },
+    { href: "/dashboard/parent/fees",          label: "Fees",   icon: Banknote },
   ],
   student: [
     { href: "/dashboard/student",              label: "Home",     icon: LayoutDashboard },

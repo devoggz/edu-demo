@@ -10,7 +10,7 @@ import {
   BookOpen, LayoutDashboard, Users, GraduationCap, BookMarked,
   Calendar, CalendarDays, LayoutGrid, Bell, DollarSign, ClipboardList,
   LogOut, TrendingUp, ChevronRight, School, FileText, MessageSquare,
-  Menu, X, Award, BarChart2,
+  Menu, X, Award, BarChart2,Banknote
 } from "lucide-react";
 
 interface NavItem { href: string; label: string; icon: ElementType; }
@@ -19,7 +19,6 @@ interface SidebarProps {
   userName: string;
   userEmail: string;
 }
-
 const navConfig: Record<string, NavItem[]> = {
   admin: [
     { href: "/dashboard/admin",                label: "Overview",       icon: LayoutDashboard },
@@ -29,7 +28,8 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/dashboard/admin/subjects",        label: "Subjects",       icon: BookMarked },
     { href: "/dashboard/admin/events",          label: "Events",         icon: CalendarDays },
     { href: "/dashboard/admin/calendar",        label: "Calendar",       icon: Calendar },
-    { href: "/dashboard/admin/fees",            label: "Fees",           icon: DollarSign },
+    { href: "/dashboard/admin/fees",            label: "Accounts",           icon: Banknote
+    },
     { href: "/dashboard/admin/notifications",   label: "Notifications",  icon: Bell },
   ],
   teacher: [
@@ -49,7 +49,7 @@ const navConfig: Record<string, NavItem[]> = {
     { href: "/dashboard/parent/homework",      label: "Homework",       icon: BookOpen },
     { href: "/dashboard/parent/performance",   label: "Performance",    icon: FileText },
     { href: "/dashboard/parent/events",        label: "Events",         icon: CalendarDays },
-    { href: "/dashboard/parent/fees",          label: "Fees",           icon: DollarSign },
+    { href: "/dashboard/parent/fees",          label: "Fees",           icon: Banknote },
     { href: "/dashboard/parent/notifications", label: "Notifications",  icon: MessageSquare },
   ],
   student: [
@@ -130,7 +130,7 @@ function NavContent({ role, userName, userEmail, onNavClick }: SidebarProps & { 
           </div>
         </div>
         <button
-          onClick={() => signOut({ callbackUrl: "/auth/login" })}
+          onClick={() => signOut({ redirectTo: "/auth/login" })}
           className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[13px] transition-colors"
           style={{ color: "hsl(var(--sidebar-text))" }}
           onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.15)"; e.currentTarget.style.color = "#fca5a5"; }}
