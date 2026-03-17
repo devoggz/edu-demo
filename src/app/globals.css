@@ -7,36 +7,28 @@
 @layer base {
   /* ─── Light mode (default) ──────────────────────────────── */
   :root {
-    /* Refined, premium blue-green palette — not shouty */
     --background:           210 20% 98%;
     --foreground:           215 25% 12%;
     --card:                 0 0% 100%;
     --card-foreground:      215 25% 12%;
     --card-border:          214 20% 90%;
-
-    --primary:              213 90% 48%;       /* rich blue — #1a6fcc */
+    --primary:              213 90% 48%;
     --primary-hover:        213 90% 42%;
     --primary-foreground:   0 0% 100%;
-
-    --secondary:            160 40% 43%;       /* muted teal-green */
+    --secondary:            160 40% 43%;
     --secondary-foreground: 0 0% 100%;
-
     --success:              158 64% 38%;
     --success-foreground:   0 0% 100%;
-
     --muted:                214 20% 95%;
     --muted-foreground:     215 15% 48%;
     --accent:               213 90% 96%;
     --accent-foreground:    213 90% 35%;
-
     --destructive:          0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-
     --border:               214 20% 90%;
     --input-bg:             0 0% 100%;
     --ring:                 213 90% 48%;
-
-    --sidebar-bg:           215 30% 10%;      /* dark navy sidebar in light mode */
+    --sidebar-bg:           215 30% 10%;
     --sidebar-border:       215 25% 18%;
     --sidebar-text:         215 15% 65%;
     --sidebar-text-active:  0 0% 100%;
@@ -44,7 +36,6 @@
     --sidebar-bg-hover:     215 25% 16%;
     --sidebar-text-hover:   0 0% 100%;
     --topnav-bg:            0 0% 100%;
-
     --radius:               0.625rem;
     --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
     --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.04);
@@ -59,29 +50,22 @@
     --card:                 222 20% 14%;
     --card-foreground:      210 20% 93%;
     --card-border:          222 18% 22%;
-
     --primary:              213 85% 60%;
     --primary-hover:        213 85% 68%;
     --primary-foreground:   0 0% 100%;
-
     --secondary:            160 45% 48%;
     --secondary-foreground: 0 0% 100%;
-
     --success:              158 64% 45%;
     --success-foreground:   0 0% 100%;
-
     --muted:                222 18% 19%;
     --muted-foreground:     220 12% 56%;
     --accent:               213 50% 20%;
     --accent-foreground:    213 85% 75%;
-
     --destructive:          0 65% 58%;
     --destructive-foreground: 0 0% 100%;
-
     --border:               222 18% 22%;
     --input-bg:             222 20% 17%;
     --ring:                 213 85% 60%;
-
     --sidebar-bg:           222 25% 8%;
     --sidebar-border:       222 20% 16%;
     --sidebar-text:         220 12% 55%;
@@ -90,7 +74,6 @@
     --sidebar-bg-hover:     222 20% 15%;
     --sidebar-text-hover:   210 20% 90%;
     --topnav-bg:            222 20% 12%;
-
     --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.20);
     --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.28), 0 1px 2px -1px rgb(0 0 0 / 0.20);
     --shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.32), 0 2px 4px -2px rgb(0 0 0 / 0.22);
@@ -104,11 +87,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    /* Prevent layout shift from scrollbar */
     overflow-y: scroll;
-    /* Prevent zoom/scale on iOS double-tap */
     -webkit-text-size-adjust: 100%;
     touch-action: manipulation;
+    position: relative;
   }
 
   body {
@@ -119,12 +101,13 @@
     line-height: 1.6;
     overflow-x: hidden;
     transition: background-color 0.25s ease, color 0.25s ease;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
   }
 
-  /* Prevent iOS input zoom — keep 16px on mobile, revert on desktop */
   input, select, textarea {
     font-size: 16px;
-    /* Prevent rubber-band zoom on interaction */
     -webkit-appearance: none;
   }
   @media (min-width: 640px) {
@@ -133,14 +116,10 @@
 
   h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 600; }
 
-  /* Smooth focus outlines */
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
   }
-
-  /* Prevent pull-to-refresh on PWA */
-  body { overscroll-behavior-y: none; }
 }
 
 @layer components {
@@ -224,7 +203,6 @@
     border: 1.5px solid hsl(var(--border));
     color: hsl(var(--foreground));
     box-shadow: var(--shadow-xs);
-    /* Prevent zoom on focus in iOS */
     -webkit-appearance: none;
   }
   .input:focus {
@@ -237,7 +215,6 @@
     opacity: 0.7;
   }
 
-  /* Premium styled select — custom chevron, consistent with inputs */
   .select {
     @apply input appearance-none cursor-pointer;
     padding-right: 2.25rem;
@@ -278,7 +255,6 @@
     border-color: hsl(var(--ring) / 0.3);
   }
 
-  /* ─── Stat cards ──────────────────────────────── */
   .stat-card { @apply card p-4 sm:p-5; }
 
   /* ─── Badges ──────────────────────────────────── */
@@ -321,12 +297,8 @@
     border-bottom: 1px solid hsl(var(--border));
   }
 
-  /* ─── Divider ─────────────────────────────────── */
-  .divider {
-    border-top: 1px solid hsl(var(--border));
-  }
+  .divider { border-top: 1px solid hsl(var(--border)); }
 
-  /* ─── Link ────────────────────────────────────── */
   .link {
     @apply text-sm font-medium transition-colors;
     color: hsl(var(--primary));
@@ -334,7 +306,7 @@
   .link:hover { color: hsl(var(--primary-hover)); }
 }
 
-/* ─── Scrollbar (desktop) ─────────────────────────────────── */
+/* ─── Scrollbar ───────────────────────────────────────────── */
 ::-webkit-scrollbar         { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track   { background: transparent; }
 ::-webkit-scrollbar-thumb   { background: hsl(var(--border)); border-radius: 99px; }
@@ -360,9 +332,9 @@
 }
 @keyframes fadeOverlay { from { opacity: 0; } to { opacity: 1; } }
 .sidebar-drawer { transition: transform .22s cubic-bezier(0.4,0,0.2,1); }
-body.sidebar-open { overflow: hidden; }
+body.sidebar-open { overflow: hidden; position: fixed; width: 100%; }
 
-/* ─── iOS safe area ───────────────────────────────────────── */
+/* ─── Safe area ───────────────────────────────────────────── */
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
 /* ─── PWA notification badge ─────────────────────────────── */
@@ -389,8 +361,6 @@ body.sidebar-open { overflow: hidden; }
 .dark .hover\:bg-slate-50:hover   { background-color: hsl(var(--muted)) !important; }
 .dark .hover\:bg-slate-100:hover  { background-color: hsl(222 18% 21%) !important; }
 .dark .bg-slate-50\/60   { background-color: hsl(var(--muted) / 0.6) !important; }
-
-/* Coloured backgrounds — map to dark equivalents */
 .dark .bg-blue-50    { background-color: hsl(213 65% 16%) !important; }
 .dark .bg-emerald-50 { background-color: hsl(158 45% 12%) !important; }
 .dark .bg-amber-50   { background-color: hsl(38 50% 14%) !important; }
@@ -402,7 +372,5 @@ body.sidebar-open { overflow: hidden; }
 .dark .bg-teal-50    { background-color: hsl(175 40% 12%) !important; }
 .dark .bg-indigo-50  { background-color: hsl(240 50% 16%) !important; }
 .dark .bg-cyan-50    { background-color: hsl(190 50% 12%) !important; }
-
-/* Keep coloured elements vibrant in dark */
 .dark .bg-blue-600   { filter: brightness(1.1); }
 .dark .bg-emerald-600 { filter: brightness(1.1); }
