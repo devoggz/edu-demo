@@ -169,7 +169,7 @@ function NavContent({
   const navItems = navConfig[role] ?? [];
 
   return (
-    <div className="flex flex-col h-screen sidebar-root">
+    <div className="flex flex-col h-full sidebar-root">
       {/* Logo */}
       <div
         className="px-4 py-4 flex-shrink-0"
