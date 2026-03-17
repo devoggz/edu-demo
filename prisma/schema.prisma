@@ -1,0 +1,394 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  TEACHER
+  PARENT
+  STUDENT
+}
+
+enum NotificationType {
+  GENERAL
+  HOMEWORK
+  EVENT
+  TRIP
+  FEE
+  PERFORMANCE
+  ANNOUNCEMENT
+  PAYMENT_PROMPT
+}
+
+enum FeeStatus {
+  PAID
+  PENDING
+  OVERDUE
+  PARTIAL
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      Role     @default(PARENT)
+  avatar    String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  teacher Teacher?
+  parent  Parent?
+  admin   Admin?
+  student StudentProfile?
+
+  sentNotifications     Notification[]     @relation("SentNotifications")
+  receivedNotifications UserNotification[]
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Teacher {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  employeeId     String   @unique
+  department     String?
+  qualification  String?
+  specialization String?
+  bio            String?
+  joinDate       DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  classes        Class[]          @relation("ClassTeacher")
+  subjects       TeacherSubject[]
+  homework       Homework[]
+  calendarEvents CalendarEvent[]
+  timetable      TimetableEntry[]
+}
+
+model Parent {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  occupation String?
+  address    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  students      Student[]
+  eventPayments EventPayment[]
+}
+
+model StudentProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studentId String   @unique
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Class {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  grade          Int
+  section        String
+  capacity       Int      @default(40)
+  room           String?
+  classTeacherId String?
+  classTeacher   Teacher? @relation("ClassTeacher", fields: [classTeacherId], references: [id])
+  academicYear   String   @default("2024-2025")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  students       Student[]
+  subjects       ClassSubject[]
+  homework       Homework[]
+  calendarEvents CalendarEvent[]
+  fees           Fee[]
+  notifications  Notification[]
+  attendance     AttendanceRecord[]
+  timetable      TimetableEntry[]
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  teachers    TeacherSubject[]
+  classes     ClassSubject[]
+  homework    Homework[]
+  performance PerformanceMetric[]
+  attendance  AttendanceRecord[]
+  timetable   TimetableEntry[]
+}
+
+model TeacherSubject {
+  id        String  @id @default(cuid())
+  teacherId String
+  subjectId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([teacherId, subjectId])
+}
+
+model ClassSubject {
+  id        String  @id @default(cuid())
+  classId   String
+  subjectId String
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([classId, subjectId])
+}
+
+// Teacher weekly timetable / schedule
+model TimetableEntry {
+  id        String   @id @default(cuid())
+  teacherId String
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  classId   String
+  class     Class    @relation(fields: [classId], references: [id])
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  dayOfWeek Int // 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri
+  startTime String // "08:00"
+  endTime   String // "09:00"
+  room      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // No unique constraint — a teacher can have multiple entries per slot (e.g. different rooms)
+}
+
+model Student {
+  id             String   @id @default(cuid())
+  studentId      String   @unique
+  name           String
+  email          String?
+  phone          String?
+  dateOfBirth    DateTime
+  gender         String
+  avatar         String?
+  classId        String
+  class          Class    @relation(fields: [classId], references: [id])
+  parentId       String
+  parent         Parent   @relation(fields: [parentId], references: [id])
+  address        String?
+  bloodGroup     String?
+  enrollmentDate DateTime @default(now())
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  profile             StudentProfile?
+  performance         PerformanceMetric[]
+  homeworkSubmissions HomeworkSubmission[]
+  fees                Fee[]
+  activities          CoCurricularActivity[]
+  attendance          AttendanceRecord[]
+  eventPayments       EventPayment[]
+}
+
+model AttendanceRecord {
+  id        String           @id @default(cuid())
+  studentId String
+  student   Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  classId   String
+  class     Class            @relation(fields: [classId], references: [id])
+  subjectId String?
+  subject   Subject?         @relation(fields: [subjectId], references: [id])
+  date      DateTime
+  status    AttendanceStatus @default(PRESENT)
+  note      String?
+  createdAt DateTime         @default(now())
+
+  @@unique([studentId, date, subjectId])
+}
+
+model Homework {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  dueDate       DateTime
+  classId       String
+  class         Class    @relation(fields: [classId], references: [id])
+  subjectId     String
+  subject       Subject  @relation(fields: [subjectId], references: [id])
+  teacherId     String
+  teacher       Teacher  @relation(fields: [teacherId], references: [id])
+  isWeekly      Boolean  @default(false)
+  attachmentUrl String?
+  maxScore      Float    @default(100)
+  instructions  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  submissions HomeworkSubmission[]
+}
+
+model HomeworkSubmission {
+  id          String    @id @default(cuid())
+  homeworkId  String
+  homework    Homework  @relation(fields: [homeworkId], references: [id])
+  studentId   String
+  student     Student   @relation(fields: [studentId], references: [id])
+  content     String? // student's written answer
+  fileUrl     String? // optional file upload URL
+  submittedAt DateTime?
+  grade       Float?
+  feedback    String?
+  status      String    @default("PENDING")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([homeworkId, studentId])
+}
+
+model PerformanceMetric {
+  id        String   @id @default(cuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  term      String
+  score     Float
+  grade     String
+  maxScore  Float    @default(100)
+  examType  String   @default("CAT")
+  remarks   String?
+  createdAt DateTime @default(now())
+}
+
+model Fee {
+  id             String    @id @default(cuid())
+  studentId      String
+  student        Student   @relation(fields: [studentId], references: [id])
+  classId        String
+  class          Class     @relation(fields: [classId], references: [id])
+  term           String
+  academicYear   String
+  totalAmount    Float
+  paidAmount     Float     @default(0)
+  dueDate        DateTime
+  status         FeeStatus @default(PENDING)
+  description    String?
+  // Admin payment prompt tracking
+  lastPromptedAt DateTime?
+  promptCount    Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model CoCurricularActivity {
+  id          String    @id @default(cuid())
+  studentId   String
+  student     Student   @relation(fields: [studentId], references: [id])
+  name        String
+  category    String
+  role        String?
+  achievement String?
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model CalendarEvent {
+  id              String    @id @default(cuid())
+  title           String
+  description     String?
+  startDate       DateTime
+  endDate         DateTime
+  allDay          Boolean   @default(false)
+  type            String    @default("EVENT") // EVENT|EXAM|TRIP|CLASS|HOLIDAY|MEETING
+  classId         String?
+  class           Class?    @relation(fields: [classId], references: [id])
+  teacherId       String?
+  teacher         Teacher?  @relation(fields: [teacherId], references: [id])
+  location        String?
+  color           String?
+  isPublic        Boolean   @default(true)
+  // Payment fields for events
+  requiresPayment Boolean   @default(false)
+  amount          Float?
+  paymentDeadline DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  payments EventPayment[]
+}
+
+// Track parent payments for paid events
+model EventPayment {
+  id        String        @id @default(cuid())
+  eventId   String
+  event     CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  studentId String
+  student   Student       @relation(fields: [studentId], references: [id])
+  parentId  String
+  parent    Parent        @relation(fields: [parentId], references: [id])
+  amount    Float
+  status    FeeStatus     @default(PENDING)
+  paidAt    DateTime?
+  mpesaRef  String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@unique([eventId, studentId])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType @default(GENERAL)
+  senderId  String
+  sender    User             @relation("SentNotifications", fields: [senderId], references: [id])
+  classId   String?
+  class     Class?           @relation(fields: [classId], references: [id])
+  isGlobal  Boolean          @default(false)
+  // Link to related entity
+  linkType  String? // "HOMEWORK" | "EVENT" | "FEE"
+  linkId    String? // the id of the linked entity
+  createdAt DateTime         @default(now())
+
+  recipients UserNotification[]
+}
+
+model UserNotification {
+  id             String       @id @default(cuid())
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notificationId String
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  isRead         Boolean      @default(false)
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@unique([userId, notificationId])
+}

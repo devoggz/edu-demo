@@ -1,0 +1,408 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..700&display=swap');
+
+@layer base {
+  /* ─── Light mode (default) ──────────────────────────────── */
+  :root {
+    /* Refined, premium blue-green palette — not shouty */
+    --background:           210 20% 98%;
+    --foreground:           215 25% 12%;
+    --card:                 0 0% 100%;
+    --card-foreground:      215 25% 12%;
+    --card-border:          214 20% 90%;
+
+    --primary:              213 90% 48%;       /* rich blue — #1a6fcc */
+    --primary-hover:        213 90% 42%;
+    --primary-foreground:   0 0% 100%;
+
+    --secondary:            160 40% 43%;       /* muted teal-green */
+    --secondary-foreground: 0 0% 100%;
+
+    --success:              158 64% 38%;
+    --success-foreground:   0 0% 100%;
+
+    --muted:                214 20% 95%;
+    --muted-foreground:     215 15% 48%;
+    --accent:               213 90% 96%;
+    --accent-foreground:    213 90% 35%;
+
+    --destructive:          0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border:               214 20% 90%;
+    --input-bg:             0 0% 100%;
+    --ring:                 213 90% 48%;
+
+    --sidebar-bg:           215 30% 10%;      /* dark navy sidebar in light mode */
+    --sidebar-border:       215 25% 18%;
+    --sidebar-text:         215 15% 65%;
+    --sidebar-text-active:  0 0% 100%;
+    --sidebar-bg-active:    213 90% 48%;
+    --sidebar-bg-hover:     215 25% 16%;
+    --sidebar-text-hover:   0 0% 100%;
+    --topnav-bg:            0 0% 100%;
+
+    --radius:               0.625rem;
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+    --shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+    --shadow-lg: 0 10px 20px -4px rgb(0 0 0 / 0.10), 0 4px 8px -4px rgb(0 0 0 / 0.05);
+  }
+
+  /* ─── Dark mode ─────────────────────────────────────────── */
+  .dark {
+    --background:           222 22% 10%;
+    --foreground:           210 20% 93%;
+    --card:                 222 20% 14%;
+    --card-foreground:      210 20% 93%;
+    --card-border:          222 18% 22%;
+
+    --primary:              213 85% 60%;
+    --primary-hover:        213 85% 68%;
+    --primary-foreground:   0 0% 100%;
+
+    --secondary:            160 45% 48%;
+    --secondary-foreground: 0 0% 100%;
+
+    --success:              158 64% 45%;
+    --success-foreground:   0 0% 100%;
+
+    --muted:                222 18% 19%;
+    --muted-foreground:     220 12% 56%;
+    --accent:               213 50% 20%;
+    --accent-foreground:    213 85% 75%;
+
+    --destructive:          0 65% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border:               222 18% 22%;
+    --input-bg:             222 20% 17%;
+    --ring:                 213 85% 60%;
+
+    --sidebar-bg:           222 25% 8%;
+    --sidebar-border:       222 20% 16%;
+    --sidebar-text:         220 12% 55%;
+    --sidebar-text-active:  0 0% 100%;
+    --sidebar-bg-active:    213 85% 55%;
+    --sidebar-bg-hover:     222 20% 15%;
+    --sidebar-text-hover:   210 20% 90%;
+    --topnav-bg:            222 20% 12%;
+
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.20);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.28), 0 1px 2px -1px rgb(0 0 0 / 0.20);
+    --shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.32), 0 2px 4px -2px rgb(0 0 0 / 0.22);
+    --shadow-lg: 0 10px 20px -4px rgb(0 0 0 / 0.40), 0 4px 8px -4px rgb(0 0 0 / 0.28);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Prevent layout shift from scrollbar */
+    overflow-y: scroll;
+    /* Prevent zoom/scale on iOS double-tap */
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+
+  body {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* Prevent iOS input zoom — keep 16px on mobile, revert on desktop */
+  input, select, textarea {
+    font-size: 16px;
+    /* Prevent rubber-band zoom on interaction */
+    -webkit-appearance: none;
+  }
+  @media (min-width: 640px) {
+    input, select, textarea { font-size: 14px; }
+  }
+
+  h1, h2, h3, h4 { letter-spacing: -0.02em; font-weight: 600; }
+
+  /* Smooth focus outlines */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Prevent pull-to-refresh on PWA */
+  body { overscroll-behavior-y: none; }
+}
+
+@layer components {
+
+  /* ─── Sidebar ─────────────────────────────────── */
+  .sidebar-root {
+    background: hsl(var(--sidebar-bg));
+    border-right: 1px solid hsl(var(--sidebar-border));
+    transition: background-color 0.25s ease;
+  }
+  .sidebar-link {
+    @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium
+           transition-all duration-150 w-full;
+    color: hsl(var(--sidebar-text));
+  }
+  .sidebar-link-active {
+    background: hsl(var(--sidebar-bg-active));
+    color: hsl(var(--sidebar-text-active));
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.15);
+  }
+  .sidebar-link-inactive:hover {
+    background: hsl(var(--sidebar-bg-hover));
+    color: hsl(var(--sidebar-text-hover));
+  }
+
+  /* ─── Top nav ─────────────────────────────────── */
+  .topnav-root {
+    background: hsl(var(--topnav-bg));
+    border-bottom: 1px solid hsl(var(--border));
+    transition: background-color 0.25s ease;
+  }
+
+  /* ─── Buttons ─────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 font-medium rounded-lg
+           transition-all duration-150 cursor-pointer select-none
+           focus-visible:outline-none focus-visible:ring-2
+           focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .btn-sm  { @apply btn text-xs  px-3   py-1.5 h-7;  }
+  .btn-md  { @apply btn text-sm  px-4   py-2   h-9;  }
+  .btn-lg  { @apply btn text-sm  px-5   py-2.5 h-10; }
+
+  .btn-primary {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    @apply shadow-sm;
+  }
+  .btn-primary:hover { background: hsl(var(--primary-hover)); }
+
+  .btn-secondary {
+    background: hsl(var(--card));
+    color: hsl(var(--foreground));
+    border: 1px solid hsl(var(--border));
+    @apply shadow-sm hover:opacity-90;
+  }
+  .btn-ghost {
+    color: hsl(var(--muted-foreground));
+  }
+  .btn-ghost:hover {
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+  }
+  .btn-success {
+    background: hsl(var(--success));
+    color: hsl(var(--success-foreground));
+    @apply shadow-sm hover:brightness-110;
+  }
+  .btn-destructive {
+    @apply bg-red-500 text-white shadow-sm hover:bg-red-600;
+  }
+
+  /* ─── Premium Form Inputs ─────────────────────── */
+  .input {
+    @apply w-full rounded-lg px-3 py-2 text-sm
+           transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    background: hsl(var(--input-bg));
+    border: 1.5px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+    box-shadow: var(--shadow-xs);
+    /* Prevent zoom on focus in iOS */
+    -webkit-appearance: none;
+  }
+  .input:focus {
+    outline: none;
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.15);
+  }
+  .input::placeholder {
+    color: hsl(var(--muted-foreground));
+    opacity: 0.7;
+  }
+
+  /* Premium styled select — custom chevron, consistent with inputs */
+  .select {
+    @apply input appearance-none cursor-pointer;
+    padding-right: 2.25rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.625rem center;
+    background-size: 1rem 1rem;
+  }
+  .select:focus {
+    outline: none;
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.15);
+  }
+
+  .label {
+    @apply block text-sm font-medium mb-1.5;
+    color: hsl(var(--foreground));
+  }
+  .label-hint {
+    @apply block text-xs mt-1;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* ─── Cards ───────────────────────────────────── */
+  .card {
+    @apply rounded-xl;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--card-border));
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.15s ease;
+  }
+  .card-body  { @apply p-4 sm:p-5; }
+  .card-hover {
+    @apply card cursor-pointer;
+  }
+  .card-hover:hover {
+    box-shadow: var(--shadow-md);
+    border-color: hsl(var(--ring) / 0.3);
+  }
+
+  /* ─── Stat cards ──────────────────────────────── */
+  .stat-card { @apply card p-4 sm:p-5; }
+
+  /* ─── Badges ──────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md
+           text-xs font-medium whitespace-nowrap;
+  }
+  .badge-blue   { @apply bg-blue-50   text-blue-700   dark:bg-blue-950/60  dark:text-blue-300; }
+  .badge-green  { @apply bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300; }
+  .badge-yellow { @apply bg-amber-50  text-amber-700  dark:bg-amber-950/50  dark:text-amber-300; }
+  .badge-red    { @apply bg-red-50    text-red-700    dark:bg-red-950/50    dark:text-red-300; }
+  .badge-purple { @apply bg-violet-50 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300; }
+  .badge-slate  { @apply bg-slate-100 text-slate-600  dark:bg-slate-800     dark:text-slate-300; }
+
+  /* ─── Data tables ─────────────────────────────── */
+  .data-table { @apply w-full text-sm; }
+  .data-table thead tr { border-bottom: 1px solid hsl(var(--border)); }
+  .data-table th {
+    @apply text-left text-xs font-semibold uppercase tracking-wider
+           py-2.5 px-3 sm:px-4 whitespace-nowrap;
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+  }
+  .data-table td {
+    @apply py-3 px-3 sm:px-4;
+    border-bottom: 1px solid hsl(var(--border));
+    color: hsl(var(--card-foreground));
+  }
+  .data-table tbody tr { transition: background-color 0.1s; }
+  .data-table tbody tr:hover { background: hsl(var(--muted)); }
+
+  /* ─── Layout helpers ──────────────────────────── */
+  .table-scroll  { @apply overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0; }
+  .page-body     { @apply p-4 sm:p-6 space-y-4 sm:space-y-5; }
+  .section-title { @apply text-sm font-semibold; color: hsl(var(--foreground)); }
+  .section-header { @apply flex items-center justify-between mb-4; }
+  .page-header-back {
+    @apply px-4 sm:px-6 py-3.5 flex items-center gap-3 sticky top-0 z-30;
+    background: hsl(var(--topnav-bg));
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  /* ─── Divider ─────────────────────────────────── */
+  .divider {
+    border-top: 1px solid hsl(var(--border));
+  }
+
+  /* ─── Link ────────────────────────────────────── */
+  .link {
+    @apply text-sm font-medium transition-colors;
+    color: hsl(var(--primary));
+  }
+  .link:hover { color: hsl(var(--primary-hover)); }
+}
+
+/* ─── Scrollbar (desktop) ─────────────────────────────────── */
+::-webkit-scrollbar         { width: 5px; height: 5px; }
+::-webkit-scrollbar-track   { background: transparent; }
+::-webkit-scrollbar-thumb   { background: hsl(var(--border)); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.4); }
+
+/* ─── Animations ──────────────────────────────────────────── */
+.animate-fade-in  { animation: fadeIn  .22s ease-out both; }
+.animate-slide-up { animation: slideUp .25s ease-out both; }
+
+@keyframes fadeIn  {
+  from { opacity: 0; transform: translateY(5px);  }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Mobile sidebar overlay ─────────────────────────────── */
+.sidebar-overlay {
+  @apply fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden;
+  animation: fadeOverlay .18s ease-out;
+}
+@keyframes fadeOverlay { from { opacity: 0; } to { opacity: 1; } }
+.sidebar-drawer { transition: transform .22s cubic-bezier(0.4,0,0.2,1); }
+body.sidebar-open { overflow: hidden; }
+
+/* ─── iOS safe area ───────────────────────────────────────── */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* ─── PWA notification badge ─────────────────────────────── */
+@media (display-mode: standalone) {
+  .pwa-badge {
+    @apply fixed top-1 right-1 z-[9999] min-w-[18px] h-[18px] rounded-full
+           bg-red-500 text-white text-[10px] font-bold
+           flex items-center justify-center px-1;
+  }
+}
+
+/* ─── Dark mode colour overrides ─────────────────────────── */
+.dark .bg-white          { background-color: hsl(var(--card)) !important; }
+.dark .bg-slate-50       { background-color: hsl(var(--muted)) !important; }
+.dark .bg-slate-100      { background-color: hsl(222 18% 21%) !important; }
+.dark .border-slate-100  { border-color: hsl(var(--border)) !important; }
+.dark .border-slate-200  { border-color: hsl(var(--border)) !important; }
+.dark .text-slate-900    { color: hsl(210 20% 93%) !important; }
+.dark .text-slate-800    { color: hsl(210 15% 86%) !important; }
+.dark .text-slate-700    { color: hsl(210 12% 75%) !important; }
+.dark .text-slate-600    { color: hsl(210 10% 65%) !important; }
+.dark .text-slate-500    { color: hsl(220 8% 56%) !important; }
+.dark .text-slate-400    { color: hsl(220 8% 48%) !important; }
+.dark .hover\:bg-slate-50:hover   { background-color: hsl(var(--muted)) !important; }
+.dark .hover\:bg-slate-100:hover  { background-color: hsl(222 18% 21%) !important; }
+.dark .bg-slate-50\/60   { background-color: hsl(var(--muted) / 0.6) !important; }
+
+/* Coloured backgrounds — map to dark equivalents */
+.dark .bg-blue-50    { background-color: hsl(213 65% 16%) !important; }
+.dark .bg-emerald-50 { background-color: hsl(158 45% 12%) !important; }
+.dark .bg-amber-50   { background-color: hsl(38 50% 14%) !important; }
+.dark .bg-red-50     { background-color: hsl(0 50% 15%) !important; }
+.dark .bg-violet-50  { background-color: hsl(265 45% 16%) !important; }
+.dark .bg-pink-50    { background-color: hsl(330 40% 15%) !important; }
+.dark .bg-green-50   { background-color: hsl(145 40% 12%) !important; }
+.dark .bg-orange-50  { background-color: hsl(25 50% 14%) !important; }
+.dark .bg-teal-50    { background-color: hsl(175 40% 12%) !important; }
+.dark .bg-indigo-50  { background-color: hsl(240 50% 16%) !important; }
+.dark .bg-cyan-50    { background-color: hsl(190 50% 12%) !important; }
+
+/* Keep coloured elements vibrant in dark */
+.dark .bg-blue-600   { filter: brightness(1.1); }
+.dark .bg-emerald-600 { filter: brightness(1.1); }
