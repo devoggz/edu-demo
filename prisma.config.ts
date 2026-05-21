@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -7,7 +7,7 @@ export default defineConfig({
     path: "prisma/migrations",
     seed: "tsx prisma/seed.ts",
   },
-  datasource: {
-    url: env("DATABASE_URL"),
-  },
+  // ← datasource.url removed: Prisma reads DATABASE_URL from
+  //   schema.prisma's env() call + your .env file automatically.
+  //   Declaring it here causes a generate-time resolution error.
 });

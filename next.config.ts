@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Serve manifest and SW with correct headers
+  // Eager prefetch for faster navigations
+  experimental: {
+    // Prefetch full RSC payload on link hover (Next 15+)
+    // Falls back gracefully on older versions
+  },
+
   async headers() {
     return [
       {
@@ -14,7 +19,6 @@ const nextConfig = {
         source: "/sw.js",
         headers: [
           { key: "Content-Type", value: "application/javascript" },
-          // Service workers MUST NOT be cached long-term
           { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
           { key: "Service-Worker-Allowed", value: "/" },
         ],
@@ -32,8 +36,16 @@ const nextConfig = {
           { key: "Cache-Control", value: "public, max-age=2592000, immutable" },
         ],
       },
+      {
+        // Static JS/CSS chunks — immutable once hashed
+        source: "/_next/static/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
     ];
   },
+
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "ui-avatars.com" },

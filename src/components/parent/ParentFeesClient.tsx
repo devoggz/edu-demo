@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { formatCurrency, formatDate, getFeeStatusColor, getInitials } from "@/lib/utils";
-import { Loader2, CheckCircle, AlertCircle, Smartphone, X, CreditCard } from "lucide-react";
+import { Loader2, CheckCircle, AlertCircle, Smartphone, X } from "lucide-react";
 
 interface FeeRecord {
   id: string;
@@ -16,15 +16,6 @@ interface FeeRecord {
   studentName: string;
   studentId: string;
   className: string;
-}
-
-interface PaymentState {
-  step: "idle" | "confirm" | "processing" | "success" | "error";
-  fee: FeeRecord | null;
-  paymentType: "full" | "partial";
-  customAmount: string;
-  message: string;
-  transactionId: string;
 }
 
 function MpesaModal({
@@ -91,14 +82,26 @@ function MpesaModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
-      <div className="rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:max-w-md overflow-hidden max-h-[90vh] overflow-y-auto transition-colors" style={{ background: "hsl(var(--card))" }}>
+    /* ── Overlay: always centered, safe padding on all viewports ── */
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.55)" }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        className="rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col"
+        style={{
+          background: "hsl(var(--card))",
+          maxHeight: "calc(100dvh - 2rem)",
+        }}
+      >
         {/* Header */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 p-5 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-green-600 to-green-700 p-5 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.022.505 3.927 1.395 5.594L.058 23.292a.5.5 0 0 0 .65.65l5.698-1.337A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.022.505 3.927 1.395 5.594L.058 23.292a.5.5 0 0 0 .65.65l5.698-1.337A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
               </svg>
             </div>
             <div>
@@ -111,11 +114,11 @@ function MpesaModal({
           </button>
         </div>
 
-        <div className="p-5 space-y-4">
+        {/* Body — scrollable if content is tall */}
+        <div className="p-5 space-y-4 overflow-y-auto">
           {/* Confirm step */}
           {step === "confirm" && (
             <>
-              {/* Fee summary */}
               <div className="rounded-2xl p-4" style={{ background: "hsl(var(--muted))" }}>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-slate-500">Total Fees</span>
@@ -131,10 +134,9 @@ function MpesaModal({
                 </div>
               </div>
 
-              {/* Payment type */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">Payment Option</label>
-                <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => setPaymentType("full")}
                     className={`py-3 px-4 rounded-xl border-2 text-sm font-semibold transition ${
@@ -160,7 +162,6 @@ function MpesaModal({
                 </div>
               </div>
 
-              {/* Partial amount input */}
               {paymentType === "partial" && (
                 <div>
                   <label className="label">Amount (KES)</label>
@@ -179,7 +180,6 @@ function MpesaModal({
                 </div>
               )}
 
-              {/* Phone number */}
               <div>
                 <label className="label">
                   <Smartphone className="w-3.5 h-3.5 inline mr-1" />
@@ -195,7 +195,6 @@ function MpesaModal({
                 <p className="text-xs text-slate-400 mt-1">You will receive an M-PESA PIN prompt on this number</p>
               </div>
 
-              {/* Pay amount summary */}
               <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex justify-between items-center">
                 <span className="text-sm text-green-700 font-medium">Amount to Pay</span>
                 <span className="text-lg font-bold text-green-700">
@@ -209,14 +208,14 @@ function MpesaModal({
                 className="btn-lg btn-success w-full"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.022.505 3.927 1.395 5.594L.058 23.292a.5.5 0 0 0 .65.65l5.698-1.337A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.022.505 3.927 1.395 5.594L.058 23.292a.5.5 0 0 0 .65.65l5.698-1.337A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
                 </svg>
                 Send M-PESA Prompt
               </button>
             </>
           )}
 
-          {/* Processing step */}
           {step === "processing" && (
             <div className="py-10 text-center space-y-4">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
@@ -230,7 +229,6 @@ function MpesaModal({
             </div>
           )}
 
-          {/* Success step */}
           {step === "success" && (
             <div className="py-8 text-center space-y-4">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
@@ -246,16 +244,10 @@ function MpesaModal({
                 )}
                 <p className="text-xs text-slate-400 mt-1">You will receive an M-PESA confirmation SMS shortly.</p>
               </div>
-              <button
-                onClick={onClose}
-                className="btn-md btn-success w-full"
-              >
-                Done
-              </button>
+              <button onClick={onClose} className="btn-md btn-success w-full">Done</button>
             </div>
           )}
 
-          {/* Error step */}
           {step === "error" && (
             <div className="py-8 text-center space-y-4">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
@@ -307,16 +299,10 @@ export function ParentFeesClient({
     );
   };
 
-  // Group by student
   const byStudent: Record<string, { name: string; studentId: string; className: string; fees: FeeRecord[] }> = {};
   for (const fee of fees) {
     if (!byStudent[fee.studentId]) {
-      byStudent[fee.studentId] = {
-        name: fee.studentName,
-        studentId: fee.studentId,
-        className: fee.className,
-        fees: [],
-      };
+      byStudent[fee.studentId] = { name: fee.studentName, studentId: fee.studentId, className: fee.className, fees: [] };
     }
     byStudent[fee.studentId].fees.push(fee);
   }
@@ -325,11 +311,10 @@ export function ParentFeesClient({
     <>
       {Object.values(byStudent).map((student) => {
         const totalPaid = student.fees.reduce((s, f) => s + f.paidAmount, 0);
-        const totalDue = student.fees.reduce((s, f) => s + f.totalAmount, 0);
+        const totalDue  = student.fees.reduce((s, f) => s + f.totalAmount, 0);
 
         return (
           <div key={student.studentId} className="card overflow-hidden">
-            {/* Student header */}
             <div className="p-4 border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
@@ -346,24 +331,21 @@ export function ParentFeesClient({
               </div>
             </div>
 
-            {/* Fee records */}
             <div className="divide-y divide-slate-50">
               {student.fees.map((fee) => {
-                const balance = fee.totalAmount - fee.paidAmount;
-                const pct = Math.round((fee.paidAmount / fee.totalAmount) * 100);
-                const isPaid = fee.status === "PAID";
+                const balance  = fee.totalAmount - fee.paidAmount;
+                const pct      = Math.round((fee.paidAmount / fee.totalAmount) * 100);
+                const isPaid   = fee.status === "PAID";
                 const isOverdue = !isPaid && new Date(fee.dueDate) < new Date();
 
                 return (
                   <div key={fee.id} className="p-4 hover:bg-slate-50/50 transition">
                     <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
                           <p className="font-semibold text-slate-800">{fee.term} {fee.academicYear}</p>
                           <span className={`badge text-xs ${getFeeStatusColor(fee.status)}`}>{fee.status}</span>
-                          {isOverdue && (
-                            <span className="badge bg-red-50 text-red-600 text-xs">OVERDUE</span>
-                          )}
+                          {isOverdue && <span className="badge bg-red-50 text-red-600 text-xs">OVERDUE</span>}
                         </div>
                         {fee.description && (
                           <p className="text-xs text-slate-500 mb-2">{fee.description}</p>
@@ -384,7 +366,6 @@ export function ParentFeesClient({
                             </p>
                           </div>
                         </div>
-                        {/* Progress bar */}
                         <div className="flex items-center gap-2">
                           <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                             <div
@@ -394,19 +375,17 @@ export function ParentFeesClient({
                           </div>
                           <span className="text-xs text-slate-400">{pct}%</span>
                         </div>
-                        <p className="text-xs text-slate-400 mt-1">
-                          Due {formatDate(fee.dueDate)}
-                        </p>
+                        <p className="text-xs text-slate-400 mt-1">Due {formatDate(fee.dueDate)}</p>
                       </div>
 
-                      {/* Pay button */}
                       {!isPaid && (
                         <button
                           onClick={() => setActiveFee(fee)}
                           className="flex items-center gap-1.5 px-4 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 transition flex-shrink-0"
                         >
                           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.022.505 3.927 1.395 5.594L.058 23.292a.5.5 0 0 0 .65.65l5.698-1.337A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/>
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.022.505 3.927 1.395 5.594L.058 23.292a.5.5 0 0 0 .65.65l5.698-1.337A11.934 11.934 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
                           </svg>
                           Pay Now
                         </button>
@@ -426,7 +405,6 @@ export function ParentFeesClient({
         );
       })}
 
-      {/* M-PESA Modal */}
       {activeFee && (
         <MpesaModal
           fee={activeFee}

@@ -45,104 +45,44 @@ const navConfig: Record<string, NavItem[]> = {
   admin: [
     { href: "/dashboard/admin", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/admin/teachers", label: "Teachers", icon: Users },
-    {
-      href: "/dashboard/admin/students",
-      label: "Students",
-      icon: GraduationCap,
-    },
+    { href: "/dashboard/admin/students", label: "Students", icon: GraduationCap },
     { href: "/dashboard/admin/classes", label: "Classes", icon: School },
     { href: "/dashboard/admin/subjects", label: "Subjects", icon: BookMarked },
     { href: "/dashboard/admin/events", label: "Events", icon: CalendarDays },
     { href: "/dashboard/admin/calendar", label: "Calendar", icon: Calendar },
     { href: "/dashboard/admin/fees", label: "Accounts", icon: Banknote },
-    {
-      href: "/dashboard/admin/notifications",
-      label: "Notifications",
-      icon: Bell,
-    },
+    { href: "/dashboard/admin/notifications", label: "Notifications", icon: Bell },
   ],
   teacher: [
     { href: "/dashboard/teacher", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/teacher/classes", label: "My Classes", icon: School },
-    {
-      href: "/dashboard/teacher/students",
-      label: "Students",
-      icon: GraduationCap,
-    },
-    {
-      href: "/dashboard/teacher/grades",
-      label: "CBC Grading",
-      icon: TrendingUp,
-    },
-    {
-      href: "/dashboard/teacher/homework",
-      label: "Homework",
-      icon: ClipboardList,
-    },
-    {
-      href: "/dashboard/teacher/timetable",
-      label: "Timetable",
-      icon: LayoutGrid,
-    },
+    { href: "/dashboard/teacher/students", label: "Students", icon: GraduationCap },
+    { href: "/dashboard/teacher/grades", label: "CBC Grading", icon: TrendingUp },
+    { href: "/dashboard/teacher/homework", label: "Homework", icon: ClipboardList },
+    { href: "/dashboard/teacher/timetable", label: "Timetable", icon: LayoutGrid },
     { href: "/dashboard/teacher/events", label: "Events", icon: CalendarDays },
     { href: "/dashboard/teacher/calendar", label: "Calendar", icon: Calendar },
-    {
-      href: "/dashboard/teacher/notifications",
-      label: "Notifications",
-      icon: Bell,
-    },
+    { href: "/dashboard/teacher/notifications", label: "Notifications", icon: Bell },
   ],
   parent: [
     { href: "/dashboard/parent", label: "Overview", icon: LayoutDashboard },
-    {
-      href: "/dashboard/parent/children",
-      label: "My Children",
-      icon: GraduationCap,
-    },
+    { href: "/dashboard/parent/children", label: "My Children", icon: GraduationCap },
     { href: "/dashboard/parent/homework", label: "Homework", icon: BookOpen },
-    {
-      href: "/dashboard/parent/performance",
-      label: "Performance",
-      icon: FileText,
-    },
+    { href: "/dashboard/parent/performance", label: "Performance", icon: FileText },
     { href: "/dashboard/parent/events", label: "Events", icon: CalendarDays },
     { href: "/dashboard/parent/fees", label: "Fees", icon: Banknote },
-    {
-      href: "/dashboard/parent/notifications",
-      label: "Notifications",
-      icon: MessageSquare,
-    },
+    { href: "/dashboard/parent/notifications", label: "Notifications", icon: MessageSquare },
   ],
   student: [
     { href: "/dashboard/student", label: "Overview", icon: LayoutDashboard },
-    {
-      href: "/dashboard/student/performance",
-      label: "Performance",
-      icon: BarChart2,
-    },
-    {
-      href: "/dashboard/student/attendance",
-      label: "Attendance",
-      icon: Calendar,
-    },
-    {
-      href: "/dashboard/student/subjects",
-      label: "Subjects",
-      icon: BookMarked,
-    },
-    {
-      href: "/dashboard/student/homework",
-      label: "Homework",
-      icon: ClipboardList,
-    },
+    { href: "/dashboard/student/performance", label: "Performance", icon: BarChart2 },
+    { href: "/dashboard/student/attendance", label: "Attendance", icon: Calendar },
+    { href: "/dashboard/student/subjects", label: "Subjects", icon: BookMarked },
+    { href: "/dashboard/student/homework", label: "Homework", icon: ClipboardList },
     { href: "/dashboard/student/activities", label: "Activities", icon: Award },
     { href: "/dashboard/student/events", label: "Events", icon: CalendarDays },
     { href: "/dashboard/student/classmates", label: "Classmates", icon: Users },
-    {
-      href: "/dashboard/student/notifications",
-      label: "Notifications",
-      icon: Bell,
-    },
+    { href: "/dashboard/student/notifications", label: "Notifications", icon: Bell },
   ],
 };
 
@@ -210,6 +150,7 @@ function NavContent({
             <Link
               key={item.href}
               href={item.href}
+              prefetch={true}
               onClick={onNavClick}
               className={cn(
                 "sidebar-link",

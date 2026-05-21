@@ -46,22 +46,35 @@ export function ParentEventPayButton({ eventId, amount, studentIds, studentNames
 
   return (
     <>
-      <button onClick={() => { setOpen(true); setStep("form"); }} className="btn-md btn-success gap-2">
+      <button
+        onClick={() => { setOpen(true); setStep("form"); }}
+        className="btn-md btn-success gap-2"
+      >
         Pay KES {amount.toLocaleString()}
       </button>
 
       {open && (
-        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
-          <div className="w-full sm:max-w-sm rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden"
-            style={{ background: "hsl(var(--card))" }}>
-            <div className="flex items-center justify-between px-5 py-4 bg-emerald-600">
+        /* ── Overlay: always centered on all screen sizes ── */
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.55)" }}
+          onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            style={{
+              background: "hsl(var(--card))",
+              maxHeight: "calc(100dvh - 2rem)",
+            }}
+          >
+            <div className="flex items-center justify-between px-5 py-4 bg-emerald-600 flex-shrink-0">
               <p className="text-white font-bold text-sm">Pay via M-PESA</p>
               <button onClick={() => setOpen(false)} className="text-white/70 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="p-5 space-y-4">
+            <div className="p-5 space-y-4 overflow-y-auto">
               {step === "form" && (
                 <>
                   <div className="rounded-xl p-4" style={{ background: "hsl(var(--muted))" }}>
@@ -74,8 +87,12 @@ export function ParentEventPayButton({ eventId, amount, studentIds, studentNames
                   {studentIds.length > 1 && (
                     <div>
                       <label className="label">Select Student</label>
-                      <select value={selectedStudent} onChange={e => setSelectedStudent(e.target.value)} className="input">
-                        {studentIds.map(sid => (
+                      <select
+                        value={selectedStudent}
+                        onChange={(e) => setSelectedStudent(e.target.value)}
+                        className="input"
+                      >
+                        {studentIds.map((sid) => (
                           <option key={sid} value={sid}>{studentNames[sid] ?? sid}</option>
                         ))}
                       </select>
@@ -86,12 +103,20 @@ export function ParentEventPayButton({ eventId, amount, studentIds, studentNames
                     <label className="label">
                       <Smartphone className="w-3.5 h-3.5 inline mr-1" />M-PESA Phone
                     </label>
-                    <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
-                      placeholder="0712 345 678" className="input" />
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="0712 345 678"
+                      className="input"
+                    />
                   </div>
 
-                  <button onClick={handlePay} disabled={!phone || !selectedStudent}
-                    className="btn-lg btn-success w-full">
+                  <button
+                    onClick={handlePay}
+                    disabled={!phone || !selectedStudent}
+                    className="btn-lg btn-success w-full"
+                  >
                     Send M-PESA Prompt
                   </button>
                 </>
